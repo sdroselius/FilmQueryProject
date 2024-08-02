@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,8 @@ import com.skilldistillery.filmquery.entities.Film;
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 
-	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=US/Mountain";
+//	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=US/Mountain";
+	private static final String URL = "jdbc:mysql://localhost:3306/sdvid";
 	private static final String user = "student";
 	private static final String pass = "student";
 	
@@ -45,7 +47,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			}
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return film;
@@ -68,7 +69,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			}
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -137,7 +137,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			}
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return films;
