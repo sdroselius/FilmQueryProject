@@ -3,6 +3,9 @@ package com.skilldistillery.filmquery.database;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +45,20 @@ class DatabaseAccessTests {
 	  Actor actor = db.findActorById(1);
 	  assertNotNull(actor);
 	  assertEquals("Penelope", actor.getFirstName());
+  }
+ 
+  @Test
+  void test_getFilmByKeyword_returns_list_of_films() {
+    List<Film> films = db.findByKeyword("VAMP");
+    assertNotNull(films);
+    assertTrue(films.size() > 0);
+  }
+
+  @Test
+  void test_getFilmByKeyword_returns_empty_list_for_invalid_keyword() {
+	  List<Film> films = db.findByKeyword("############");
+	  assertNotNull(films);
+	  assertEquals(0, films.size());
   }
   
 }

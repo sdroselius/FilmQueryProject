@@ -84,7 +84,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet rs = stmt.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				Actor actor = new Actor();
 				actor.setId(rs.getInt("id"));
 				actor.setFirstName(rs.getString("first_name"));
@@ -109,13 +109,38 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 	@Override
 	public List<Film> findByKeyword(String keyword) {
-		// TODO Auto-generated method stub
-//		String sql = "blah blah LIKE ? or blah LIKE ?";
-//		keyword = "%" + keyword + "%";
-//		stmt.setString(1, keyword);
-//		stmt.setString(2, keyword);
-		
-		return null;
+		List<Film> films = new ArrayList<>();
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT film.*, language.name FROM film JOIN language ON film.language_id = language.id WHERE film.title LIKE ? OR film.description LIKE ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			keyword = "%" + keyword + "%";
+			stmt.setString(1, keyword);
+			stmt.setString(2, keyword);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Film film = new Film();
+				film.setId(rs.getInt("film.id"));
+				film.setTitle(rs.getString("title"));
+				film.setDescription(rs.getString("description"));
+				film.setReleaseYear(rs.getInt("release_year"));
+				film.setLanguageId(rs.getInt("language_id"));
+				film.setRentalDuration(rs.getInt("rental_duration"));
+				film.setRentalRate(rs.getDouble("rental_rate"));
+				film.setLength(rs.getInt("length"));
+				film.setReplacementCost(rs.getDouble("replacement_cost"));
+				film.setRating(rs.getString("rating"));
+				film.setSpecialFeatures(rs.getString("special_features"));
+				film.setLanguageName(rs.getString("language.name"));
+				film.setActors(findActorsByFilmId(film.getId()));
+				films.add(film);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return films;
 	}
 	
 }
