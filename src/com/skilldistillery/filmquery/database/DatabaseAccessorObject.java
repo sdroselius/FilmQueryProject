@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.skilldistillery.filmquery.entities.Actor;
@@ -21,7 +22,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Film film = null;
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
-			String sql = "SELECT * FROM film WHERE id = ?";
+//			String sql = "SELECT * FROM film WHERE id = ?";
+			String sql = "SELECT film.*, language.name FROM film JOIN language ON film.language_id = language.id WHERE film.id =  ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet rs = stmt.executeQuery();
@@ -38,8 +40,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setReplacementCost(rs.getDouble("replacement_cost"));
 				film.setRating(rs.getString("rating"));
 				film.setSpecialFeatures(rs.getString("special_features"));
+				film.setLanguageName(rs.getString("language.name"));
+				film.setActors(findActorsByFilmId(filmId));
 			}
-			
 			conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -50,14 +53,49 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 	@Override
 	public Actor findActorById(int actorId) {
-		// TODO Auto-generated method stub
-		return null;
+		Actor actor = null;
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT * FROM actor where id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, actorId);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				actor = new Actor();
+				actor.setId(rs.getInt("id"));
+				actor.setFirstName(rs.getString("first_name"));
+				actor.setLastName(rs.getString("last_name"));
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return actor;
 	}
 
 	@Override
 	public List<Actor> findActorsByFilmId(int filmId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Actor> actors = new ArrayList<>();
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT actor.* FROM actor JOIN film_actor ON actor.id = film_actor.actor_id WHERE film_actor.film_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, filmId);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				Actor actor = new Actor();
+				actor.setId(rs.getInt("id"));
+				actor.setFirstName(rs.getString("first_name"));
+				actor.setLastName(rs.getString("last_name"));
+				actors.add(actor);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return actors;
 	}
 
 	static {
@@ -67,6 +105,17 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			System.out.println("Unable to load MySQL driver");
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<Film> findByKeyword(String keyword) {
+		// TODO Auto-generated method stub
+//		String sql = "blah blah LIKE ? or blah LIKE ?";
+//		keyword = "%" + keyword + "%";
+//		stmt.setString(1, keyword);
+//		stmt.setString(2, keyword);
+		
+		return null;
 	}
 	
 }
