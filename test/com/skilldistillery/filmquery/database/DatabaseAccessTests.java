@@ -1,5 +1,6 @@
 package com.skilldistillery.filmquery.database;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,4 +47,12 @@ class DatabaseAccessTests {
 	  assertTrue(actors.size() > 0);
   }
   
+  @Test
+  void test_getActorById_returns_actor_with_id() {
+    Actor a = db.findActorById(1);
+    assertNotNull(a);
+    assertEquals("Penelope", a.getFirstName());
+  }
+
+
 }

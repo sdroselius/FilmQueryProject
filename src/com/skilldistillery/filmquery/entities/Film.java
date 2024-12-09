@@ -1,5 +1,6 @@
 package com.skilldistillery.filmquery.entities;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Film {
@@ -9,6 +10,7 @@ public class Film {
 	private String description;
 	private Integer releaseYear;
 	private int languageId;
+	private String language;
 	private int rentalDuration;
 	private double rentalRate;
 	private int length;
@@ -16,8 +18,8 @@ public class Film {
 	private String rating;
 	private String specialFeatures;
 
-	//TODO: Add a List<Actor> field, with getter/setter
-	
+	private List<Actor> actors;
+
 	public Film() {
 	}
 
@@ -77,6 +79,14 @@ public class Film {
 		this.languageId = languageId;
 	}
 
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
 	public int getRentalDuration() {
 		return rentalDuration;
 	}
@@ -123,6 +133,14 @@ public class Film {
 
 	public void setSpecialFeatures(String specialFeatures) {
 		this.specialFeatures = specialFeatures;
+	}
+
+	public List<Actor> getActors() {
+		return actors;
+	}
+
+	public void setActors(List<Actor> actors) {
+		this.actors = actors;
 	}
 
 	@Override
